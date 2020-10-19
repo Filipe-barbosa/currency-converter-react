@@ -41,15 +41,18 @@ const value2Gold = {
 
 const CurrencySelector = (props) => {
     const options = [];
-   for (let [currencyIdentifier, currencyDetails] of Object.entries( value2Gold )){ 
-      options.push(<option value={currencyIdentifier}> {currencyDetails["flagCode"]} {currencyDetails["displayName"]} </option>) 
+   for (let [currencyIdentifier, currencyDetails] of Object.entries( value2Gold )){
+     const isSelected = currencyIdentifier === props.selectedCurrency 
+      options.push(<option selected={isSelected} value={currencyIdentifier}> {currencyDetails["flagCode"]} {currencyDetails["displayName"]} </option>) 
    } 
+
 return (
      <select id={props.id} onChange={props.onChange} class="rounded-field bg-secondary text-white">
      {options}
     </select>
   );
 }
+
 
 const InputValue = (props) => {
   return (
@@ -106,9 +109,9 @@ function App() {
       <div class="main-container">
 
         <div class="flex-container" id="input-select">
-          <CurrencySelector id="gold-select" onChange={converterCurrencysAndDisplayValue} />
+          <CurrencySelector id="gold-select" selectedCurrency="USD" onChange={converterCurrencysAndDisplayValue} />
           <img src={seta} width="35" onClick={flipSelectedCurrency} title="Inverter Moedas" />
-          <CurrencySelector id="gold-converter" onChange={converterCurrencysAndDisplayValue}/>
+          <CurrencySelector id="gold-converter" selectedCurrency="BRL" onChange={converterCurrencysAndDisplayValue}/>
         </div>
 
         <div class="flex-container" id="export-select">
