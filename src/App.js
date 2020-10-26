@@ -1,92 +1,66 @@
-import React from 'react';
-import seta from './seta.png';
-import './App.css';
-
-const value2Gold = {
-  "USD": {
-    displayName: "Dolar",
-    flagCode: "\ud83c\uddfa\ud83c\uddf8",
-
-  },
-  "AUD": {
-    displayName: "Dolar Autraliano",
-    flagCode: "\ud83c\udde6\ud83c\uddfa",
-    
-  },
-  "CAD": {
-    displayName: "Dolar Canadense",
-    flagCode: "\ud83c\udde8\ud83c\udde6",
-  },
-  "EUR": {
-    displayName: "Euro",
-    flagCode: "\uD83C\uDDEA\uD83C\uDDFA",
-  },
-  "SFR": {
-    displayName: "Franco Suiço",
-    flagCode: "\ud83c\uddeb\ud83c\uddf7",
-  },
-  "GBP": {
-    displayName: "Libra Estrelina",
-    flagCode: "\ud83c\udded\ud83c\uddf2",
-  },
-  "BRL": {
-    displayName: "Real",
-    flagCode: "\ud83c\udde7\ud83c\uddf7",
-  },
-  "ARS": {
-    displayName: "Peso Argentino",
-    flagCode: "\ud83c\udde6\ud83c\uddf7",
-  },
-};
+import React from "react";
+import seta from "./seta.png";
+import "./App.css";
+import { value2Gold } from "./mapCurrrencies";
 
 const CurrencySelector = (props) => {
-    const options = [];
-   for (let [currencyIdentifier, currencyDetails] of Object.entries( value2Gold )){
-     const isSelected = currencyIdentifier === props.selectedCurrency 
-      options.push(<option selected={isSelected} value={currencyIdentifier}> {currencyDetails["flagCode"]} {currencyDetails["displayName"]} </option>) 
-   } 
+  const options = [];
+  for (let [currencyIdentifier, currencyDetails] of Object.entries(
+    value2Gold
+  )) {
+    const isSelected = currencyIdentifier === props.selectedCurrency;
+    options.push(
+      <option selected={isSelected} value={currencyIdentifier}>
+        {" "}
+        {currencyDetails["flagCode"]} {currencyDetails["displayName"]}{" "}
+      </option>
+    );
+  }
 
-return (
-     <select id={props.id} onChange={props.onChange} class="rounded-field bg-secondary text-white">
-     {options}
+  return (
+    <select
+      id={props.id}
+      onChange={props.onChange}
+      className="rounded-field bg-secondary text-white"
+    >
+      {options}
     </select>
   );
-}
-
+};
 
 const InputValue = (props) => {
   return (
     <input
       id={props.id}
       type="number"
-      class="rounded-field"
+      className="rounded-field"
       placeholder={props.placeholder}
-      onKeyUp={props.handler}/>    
-  )
-}
+      onKeyUp={props.handler}
+    />
+  );
+};
 
 const flipSelectedCurrency = () => {
   const currencyInverterSelect = document.getElementById("gold-select");
   const currencyInverterConverter = document.getElementById("gold-converter");
   const currencyInveterOperationAux = currencyInverterSelect.value;
-  currencyInverterSelect.value = currencyInverterConverter.value; 
-  
+  currencyInverterSelect.value = currencyInverterConverter.value;
+
   currencyInverterConverter.value = currencyInveterOperationAux;
   converterCurrencysAndDisplayValue();
 };
 
 const getCurrencyNameIntoToAbreviation = (selectorName) => {
-   return document.getElementById(selectorName).value;
-  
+  return document.getElementById(selectorName).value;
 };
-const converterCurrencysAndDisplayValue = () => {
+const converterCurrencysAndDisplayValue = (event) => {
+  console.log(event.target.value)
   const sourceCurrency = getCurrencyNameIntoToAbreviation("gold-select");
   const destCurrency = getCurrencyNameIntoToAbreviation("gold-converter");
   getValueInApiAndCoverter();
 };
 
 const getValueInApiAndCoverter = () => {
-  
   fetch(
     `https://api.exchangeratesapi.io/latest?base=${getCurrencyNameIntoToAbreviation(
       "gold-select"
@@ -106,20 +80,36 @@ const getValueInApiAndCoverter = () => {
 function App() {
   return (
     <div className="App">
-      <div class="main-container">
-
-        <div class="flex-container" id="input-select">
-          <CurrencySelector id="gold-select" selectedCurrency="USD" onChange={converterCurrencysAndDisplayValue} />
-          <img src={seta} width="35" onClick={flipSelectedCurrency} title="Inverter Moedas" />
-          <CurrencySelector id="gold-converter" selectedCurrency="BRL" onChange={converterCurrencysAndDisplayValue}/>
+      <div className="main-container">
+        <div className="flex-container" id="input-select">
+          <CurrencySelector
+            id="gold-select"
+            selectedCurrency="USD"
+            onChange={converterCurrencysAndDisplayValue}
+          />
+          <img
+            src={seta}
+            width="35"
+            onClick={flipSelectedCurrency}
+            title="Inverter Moedas"
+          />
+          <CurrencySelector
+            id="gold-converter"
+            selectedCurrency="BRL"
+            onChange={converterCurrencysAndDisplayValue}
+          />
         </div>
 
-        <div class="flex-container" id="export-select">
-          <InputValue id="gold-value" handler={converterCurrencysAndDisplayValue} placeholder="Insira o valor a converter" />
-          <InputValue id="gold-result"placeholder="Valor Convertido" />
+        <div className="flex-container" id="export-select">
+          <InputValue
+            id="gold-value"
+            handler={converterCurrencysAndDisplayValue}
+            placeholder="Insira o valor a converter"
+          />
+          <InputValue id="gold-result" placeholder="Valor Convertido" />
         </div>
       </div>
     </div>
-    );
-  }
-  export default App;
+  );
+}
+export default App;
